@@ -4,24 +4,25 @@ const REJECTED = 'rejected'
 
 class Promise{
   constructor(executor){
-    this.status = PEDING
-    this.value = undefined
-    this.reason = undefined
+    let self = this
+    self.status = PEDING
+    self.value = undefined
+    self.reason = undefined
     //如果是个异步的情况，那么then会在resolve之前执行，所以使用发布订阅解决
-    this.onResolveCB = []
-    this.onRejectCB = []
+    self.onResolveCB = []
+    self.onRejectCB = []
     let resolve = (value) => {
-      if (this.status === PEDING) {
-        this.value = value
-        this.status = FULFILLED
-        this.onResolveCB.forEach(item => item(this.value))
+      if (self.status === PEDING) {
+        self.value = value
+        self.status = FULFILLED
+        self.onResolveCB.forEach(item => item(self.value))
       }
     }
     let reject = (reason) => {
-      if (this.status === PEDING) {
-        this.reason = reason
-        this.status = REJECTED
-        this.onRejectCB.forEach(item => item(this.reason))
+      if (self.status === PEDING) {
+        self.reason = reason
+        self.status = REJECTED
+        self.onRejectCB.forEach(item => item(self.reason))
       }
     }
     try {
@@ -32,14 +33,21 @@ class Promise{
   }
   then(onResolve, onReject){
     let self = this 
-    console.log(this)
+    // console.log(this)
     if (self.status === FULFILLED) {
-      onResolve(self.value)
+      return new Promise((resolve, reject) => {
+        let x = onResolve(self.value)
+        resolve(x)
+      })
     }
     if (self.status === REJECTED) {
-      onReject(self.reason)
+      return new Promise((resolve, reject) => {
+        let x = onReject(self.reason)
+        reject(x)
+      })
     }
     if (self.status === PEDING){
+      // return new Promise
       self.onResolveCB.push(onResolve)
       self.onRejectCB.push(onReject)
     }

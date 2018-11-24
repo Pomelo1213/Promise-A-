@@ -1,13 +1,15 @@
 let Promise = require('./promise.js')
 
 let p = new Promise((resolve, reject) => {
-  setTimeout(() => {
-    resolve(1)
-  })
+  console.log('start')
+  resolve(10)
 })
 p.then((resolve) => {
-  console.log(resolve)
-  console.log('finish')
-}, (reject) => { 
+  console.log('first--->>', resolve)
+  return 1
+})
+.then((resolve) => {
+  console.log('second--->>', resolve)
+}, (reject) => {
   console.log(reject)
 })
