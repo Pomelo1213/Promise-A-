@@ -33,7 +33,6 @@ class Promise{
   }
   then(onResolve, onReject){
     let self = this 
-    // console.log(this)
     if (self.status === FULFILLED) {
       return new Promise((resolve, reject) => {
         let x = onResolve(self.value)
@@ -47,9 +46,16 @@ class Promise{
       })
     }
     if (self.status === PEDING){
-      // return new Promise
-      self.onResolveCB.push(onResolve)
-      self.onRejectCB.push(onReject)
+      return new Promise((resolve, reject) => {
+        self.onResolveCB.push(() => {
+          let x = onResolve(self.value)
+          resolve(x)
+        })
+        self.onRejectCB.push(() => {
+          let x = onReject(self.reason)
+          reject(x)
+        })
+      })
     }
   }
 }

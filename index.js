@@ -1,8 +1,9 @@
 let Promise = require('./promise.js')
 
 let p = new Promise((resolve, reject) => {
-  console.log('start')
-  resolve(10)
+  setTimeout(() => {
+    resolve(10)
+  },1000)
 })
 p.then((resolve) => {
   console.log('first--->>', resolve)
